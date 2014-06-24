@@ -1110,9 +1110,9 @@ static NSOperationQueue *sharedQueue = nil;
 		
 		// Are we gzipping the request body?
 		if ([self compressedPostBodyFilePath] && [fileManager fileExistsAtPath:[self compressedPostBodyFilePath]]) {
-			[self setPostBodyReadStream:[ASIInputStream inputStreamWithFileAtPath:[self compressedPostBodyFilePath] request:self]];
+			[self setPostBodyReadStream:(NSInputStream*)[ASIInputStream inputStreamWithFileAtPath:[self compressedPostBodyFilePath] request:self]];
 		} else {
-			[self setPostBodyReadStream:[ASIInputStream inputStreamWithFileAtPath:[self postBodyFilePath] request:self]];
+			[self setPostBodyReadStream:(NSInputStream*)[ASIInputStream inputStreamWithFileAtPath:[self postBodyFilePath] request:self]];
 		}
 		[self setReadStream:(__bridge NSInputStream *)(CFReadStreamCreateForStreamedHTTPRequest(kCFAllocatorDefault, request,(__bridge CFReadStreamRef)[self postBodyReadStream]))];
     } else {
@@ -1120,9 +1120,9 @@ static NSOperationQueue *sharedQueue = nil;
 		// If we have a request body, we'll stream it from memory using our custom stream, so that we can measure bandwidth use and it can be bandwidth-throttled if necessary
 		if ([self postBody] && [[self postBody] length] > 0) {
 			if ([self shouldCompressRequestBody] && [self compressedPostBody]) {
-				[self setPostBodyReadStream:[ASIInputStream inputStreamWithData:[self compressedPostBody] request:self]];
+				[self setPostBodyReadStream:(NSInputStream*)[ASIInputStream inputStreamWithData:[self compressedPostBody] request:self]];
 			} else if ([self postBody]) {
-				[self setPostBodyReadStream:[ASIInputStream inputStreamWithData:[self postBody] request:self]];
+				[self setPostBodyReadStream:(NSInputStream*)[ASIInputStream inputStreamWithData:[self postBody] request:self]];
 			}
 			[self setReadStream:(__bridge_transfer NSInputStream *)(CFReadStreamCreateForStreamedHTTPRequest(kCFAllocatorDefault, request,(__bridge CFReadStreamRef)[self postBodyReadStream]))];
 		
@@ -1150,8 +1150,8 @@ static NSOperationQueue *sharedQueue = nil;
             // see: http://iphonedevelopment.blogspot.com/2010/05/nsstream-tcp-and-ssl.html
             
             NSDictionary *sslProperties = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      @YES, kCFStreamSSLAllowsExpiredCertificates,
-                                      @YES, kCFStreamSSLAllowsAnyRoot,
+//                                      @YES, kCFStreamSSLAllowsExpiredCertificates,
+//                                      @YES, kCFStreamSSLAllowsAnyRoot,
                                       @NO,  kCFStreamSSLValidatesCertificateChain,
                                       kCFNull,kCFStreamSSLPeerName,
                                       nil];
@@ -1853,7 +1853,8 @@ static NSOperationQueue *sharedQueue = nil;
 
 
 #pragma mark talking to delegates / calling blocks
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 /* ALWAYS CALLED ON MAIN THREAD! */
 - (void)requestStarted
 {
@@ -1994,7 +1995,7 @@ static NSOperationQueue *sharedQueue = nil;
 	}
 	#endif
 }
-
+#pragma clang diagnostic pop
 // Subclasses might override this method to perform error handling in the same thread
 // If you do this, don't forget to call [super failWithError:] to let the queue / delegate know we're done
 - (void)failWithError:(NSError *)theError

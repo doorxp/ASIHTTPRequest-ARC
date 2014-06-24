@@ -155,8 +155,7 @@ static void logReachabilityFlags_(const char *name, int line, SCNetworkReachabil
 
 #define logNetworkStatus(status) (logNetworkStatus_(__PRETTY_FUNCTION__, __LINE__, status))
 
-static void logNetworkStatus_(const char *name, int line, NetworkStatus status) {
-	
+void logNetworkStatus_(const char *name, int line, NetworkStatus status) {
 	NSString *statusString = nil;
 	
 	switch (status) {
