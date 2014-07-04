@@ -107,6 +107,9 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <netinet/in.h>
 
+#ifndef NS_DESIGNATED_INITIALIZER
+#define NS_DESIGNATED_INITIALIZER
+#endif
 #define USE_DDG_EXTENSIONS 1 // Use DDG's Extensions to test network criteria.
 // Since NSAssert and NSCAssert are used in this code, 
 // I recommend you set NS_BLOCK_ASSERTIONS=1 in the release versions of your projects.
@@ -146,7 +149,7 @@ extern NSString *const kReachabilityChangedNotification;
 @property (atomic, copy) NSString *key; // Atomic because network operations are asynchronous.
 
 // Designated Initializer.
-- (Reachability *) initWithReachabilityRef: (SCNetworkReachabilityRef) ref NS_DESIGNATED_INITIALIZER;
+- (Reachability *) initWithReachabilityRef:(SCNetworkReachabilityRef) ref NS_DESIGNATED_INITIALIZER;
 
 // Use to check the reachability of a particular host name. 
 + (Reachability *) reachabilityWithHostName: (NSString*) hostName;
