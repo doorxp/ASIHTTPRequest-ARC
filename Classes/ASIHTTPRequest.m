@@ -3432,6 +3432,8 @@ static NSOperationQueue *sharedQueue = nil;
 
 	if (![self needsRedirect] && ![self authenticationNeeded] && ![self didUseCachedResponse]) {
 		
+        CFRetain((__bridge CFTypeRef)(self));
+        
 		if (fileError) {
 			[self failWithError:fileError];
 		} else {
@@ -3439,6 +3441,7 @@ static NSOperationQueue *sharedQueue = nil;
 		}
 
 		[self markAsFinished];
+        CFRelease((__bridge CFTypeRef)(self));
 		
 	// If request has asked delegate or ASIAuthenticationDialog for credentials
 	} else if ([self authenticationNeeded]) {
