@@ -1956,6 +1956,8 @@ static NSOperationQueue *sharedQueue = nil;
 	#if NS_BLOCKS_AVAILABLE
 	if(completionBlock){
 		completionBlock();
+        completionBlock = nil;
+        failureBlock = nil;
 	}
 	#endif
 
@@ -1974,6 +1976,8 @@ static NSOperationQueue *sharedQueue = nil;
 	#if NS_BLOCKS_AVAILABLE
     if(failureBlock){
         failureBlock();
+        failureBlock = nil;
+        completionBlock = nil;
     }
 	#endif
 
