@@ -3915,7 +3915,7 @@ static NSOperationQueue *sharedQueue = nil;
 		// Work around <rdar://problem/5530166>.  This dummy call to 
 		// CFNetworkCopyProxiesForURL initialise some state within CFNetwork 
 		// that is required by CFNetworkCopyProxiesForAutoConfigurationScript.
-		CFRelease(CFNetworkCopyProxiesForURL((__bridge CFURLRef)[self url], NULL));
+//		CFRelease(CFNetworkCopyProxiesForURL((__bridge CFURLRef)[self url], NULL));
 
 		// Obtain the list of proxies by running the autoconfiguration script
 		CFErrorRef err = NULL;
